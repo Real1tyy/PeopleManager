@@ -1,7 +1,7 @@
 {
-	"name": "periodix-planner",
-	"version": "1.1.1",
-	"description": "Intelligent periodic note generation with hierarchical time allocation, budget tracking, and interconnected daily/weekly/monthly/quarterly/yearly planning.",
+	"name": "people-manager",
+	"version": "0.1.0",
+	"description": "A powerful CRM plugin for managing contacts, tracking follow-ups, and building meaningful relationships in Obsidian.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
@@ -24,18 +24,15 @@
 	"keywords": [
 		"obsidian",
 		"plugin",
-		"periodic-notes",
-		"planning",
-		"time-allocation",
-		"time-tracking",
-		"productivity",
-		"goals",
-		"budgeting",
-		"daily",
-		"weekly",
-		"monthly",
-		"quarterly",
-		"yearly"
+		"crm",
+		"contacts",
+		"people",
+		"relationships",
+		"follow-ups",
+		"notifications",
+		"network",
+		"mlm",
+		"business"
 	],
 	"funding": {
 		"type": "github",

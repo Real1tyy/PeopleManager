@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { Frontmatter } from "../../src/types";
+import type { PersonFrontmatter } from "../../src/types";
 
 // Base Plugin class mock
 export class Plugin {
@@ -311,7 +311,7 @@ export function createMockFile(
 }
 
 // Helper to create mock file cache
-export function createMockFileCache(frontmatter?: Frontmatter) {
+export function createMockFileCache(frontmatter?: PersonFrontmatter) {
 	return {
 		frontmatter: frontmatter || {},
 		frontmatterPosition: frontmatter ? { start: { line: 0 }, end: { line: 3 } } : null,
