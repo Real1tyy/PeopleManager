@@ -1,0 +1,12 @@
+{
+	"id": "plugin-name",
+	"name": "Plugin Name",
+	"version": "0.0.1",
+	"minAppVersion": "1.4.16",
+	"description": "Plugin description goes here.",
+	"author": "Your Name",
+	"authorUrl": "https://github.com/yourusername",
+	"fundingUrl": "https://github.com/sponsors/yourusername",
+	"helpUrl": "https://yourusername.github.io/plugin-name/",
+	"isDesktopOnly": false
+}
