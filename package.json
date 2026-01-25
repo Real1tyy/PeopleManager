@@ -6,7 +6,7 @@
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"build": "pnpm -C shared build && tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"typecheck": "tsc -noEmit -skipLibCheck",
 		"test": "vitest run",
 		"test:watch": "vitest",
@@ -59,9 +59,11 @@
 	"dependencies": {
 		"@real1ty-obsidian-plugins": "file:./shared",
 		"chart.js": "^4.5.1",
+		"colord": "^2.9.3",
 		"luxon": "^3.7.2",
 		"nanoid": "^5.1.6",
 		"rxjs": "^7.8.2",
+		"yaml": "^2.8.2",
 		"zod": "^4.1.12"
 	}
 }
