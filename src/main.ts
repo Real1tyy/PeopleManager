@@ -1,12 +1,9 @@
+import { getActiveFileOrThrow } from "@real1ty-obsidian-plugins/file/file-operations";
 import { Plugin } from "obsidian";
 
-interface PluginSettings {
-	// Add your settings here
-}
+type PluginSettings = Record<string, never>;
 
-const DEFAULT_SETTINGS: PluginSettings = {
-	// Add default values here
-};
+const DEFAULT_SETTINGS: PluginSettings = {};
 
 export default class PluginNamePlugin extends Plugin {
 	settings: PluginSettings;
@@ -27,6 +24,20 @@ export default class PluginNamePlugin extends Plugin {
 			name: "Open sample modal",
 			callback: () => {
 				console.log("Sample command executed");
+			},
+		});
+
+		// Example command using shared utilities
+		this.addCommand({
+			id: "get-active-file",
+			name: "Get active file",
+			callback: () => {
+				try {
+					const file = getActiveFileOrThrow(this.app);
+					console.log(`Active file: ${file.path}`);
+				} catch {
+					console.error("No active file");
+				}
 			},
 		});
 

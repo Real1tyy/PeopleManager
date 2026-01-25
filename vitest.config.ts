@@ -11,7 +11,7 @@ export default defineConfig({
 		setupFiles: ["./tests/setup.ts"],
 		server: {
 			deps: {
-				inline: ["@real1ty-obsidian-plugins/utils", "@real1ty-obsidian-plugins/common-plugin"],
+				inline: ["@real1ty-obsidian-plugins", "@real1ty-obsidian-plugins"],
 			},
 		},
 	},

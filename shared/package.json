@@ -1,0 +1,133 @@
+{
+	"name": "@real1ty-obsidian-plugins",
+	"version": "2.34.0",
+	"description": "Shared utilities and common plugin base for Obsidian plugins",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./core": {
+			"types": "./dist/core/index.d.ts",
+			"import": "./dist/core/index.js"
+		},
+		"./testing": {
+			"types": "./dist/testing/index.d.ts",
+			"import": "./dist/testing/index.js"
+		},
+		"./*": {
+			"types": "./dist/*.d.ts",
+			"import": "./dist/*.js"
+		}
+	},
+	"files": [
+		"dist",
+		"src",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsc --watch",
+		"clean": "rm -rf dist",
+		"test": "vitest run",
+		"test:watch": "vitest watch",
+		"typecheck": "tsc -noEmit",
+		"prepublishOnly": "pnpm clean && pnpm build && pnpm test",
+		"patch-release": "pnpm version patch && pnpm publish --no-git-checks",
+		"minor-release": "pnpm version minor && pnpm publish --no-git-checks",
+		"major-release": "pnpm version major && pnpm publish --no-git-checks"
+	},
+	"keywords": [
+		"obsidian",
+		"plugin",
+		"utilities",
+		"common",
+		"base",
+		"typescript",
+		"shared"
+	],
+	"author": "Real1ty",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Real1tyy/Real1ty-Obsidian-Plugins",
+		"directory": "shared"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
+	"dependencies": {
+		"obsidian": "^1.8.7",
+		"tslib": "^2.8.1",
+		"colord": "^2.9.3",
+		"gray-matter": "^4.0.3",
+		"luxon": "^3.7.2",
+		"rxjs": "^7.8.2",
+		"yaml": "^2.8.2",
+		"zod": "^4.1.5"
+	},
+	"devDependencies": {
+		"@types/luxon": "^3.7.1",
+		"fast-check": "^4.3.0",
+		"typescript": "^5.0.0",
+		"vite-tsconfig-paths": "^5.1.2",
+		"vitest": "^2.1.9",
+		"jsdom": "^25.0.1"
+	},
+	"nx": {
+		"sourceRoot": "shared/src",
+		"targets": {
+			"build": {
+				"executor": "nx:run-commands",
+				"options": {
+					"command": "pnpm build",
+					"cwd": "{projectRoot}"
+				}
+			},
+			"dev": {
+				"executor": "nx:run-commands",
+				"options": {
+					"command": "pnpm dev",
+					"cwd": "{projectRoot}"
+				}
+			},
+			"test": {
+				"executor": "nx:run-commands",
+				"options": {
+					"command": "pnpm test",
+					"cwd": "{projectRoot}"
+				}
+			},
+			"test:watch": {
+				"executor": "nx:run-commands",
+				"options": {
+					"command": "pnpm test:watch",
+					"cwd": "{projectRoot}"
+				}
+			},
+			"typecheck": {
+				"executor": "nx:run-commands",
+				"options": {
+					"command": "pnpm typecheck",
+					"cwd": "{projectRoot}"
+				}
+			},
+			"clean": {
+				"executor": "nx:run-commands",
+				"options": {
+					"command": "pnpm clean",
+					"cwd": "{projectRoot}"
+				}
+			}
+		},
+		"tags": [
+			"type:lib",
+			"scope:shared"
+		]
+	}
+}
