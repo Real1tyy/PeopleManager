@@ -62,9 +62,10 @@ export class SettingsStore<TSchema extends z.ZodTypeAny> {
 
 	async updateProperty<K extends keyof z.infer<TSchema>>(key: K, value: z.infer<TSchema>[K]): Promise<void> {
 		await this.updateSettings((settings) => {
-			const updated = Object.assign({}, settings);
-			(updated as any)[key] = value;
-			return updated;
+			return {
+				...(settings as object),
+				[key]: value,
+			} as z.infer<TSchema>;
 		});
 	}
 
