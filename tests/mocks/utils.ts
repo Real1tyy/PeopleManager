@@ -71,34 +71,34 @@ export function resetAllMocks() {
 // Helper to setup mocks with specific implementations
 export function setupMockImplementation(
 	mockName: keyof typeof mockFileOperations | keyof typeof mockLinkParser,
-	implementation: (...args: any[]) => any
+	implementation: (...args: unknown[]) => unknown
 ) {
 	if (mockName in mockFileOperations) {
-		(mockFileOperations as any)[mockName].mockImplementation(implementation);
+		(mockFileOperations as unknown)[mockName].mockImplementation(implementation);
 	} else if (mockName in mockLinkParser) {
-		(mockLinkParser as any)[mockName].mockImplementation(implementation);
+		(mockLinkParser as unknown)[mockName].mockImplementation(implementation);
 	}
 }
 
 // Helper to setup mock return values
 export function setupMockReturnValue(
 	mockName: keyof typeof mockFileOperations | keyof typeof mockLinkParser,
-	value: any
+	value: unknown
 ) {
 	if (mockName in mockFileOperations) {
-		(mockFileOperations as any)[mockName].mockReturnValue(value);
+		(mockFileOperations as unknown)[mockName].mockReturnValue(value);
 	} else if (mockName in mockLinkParser) {
-		(mockLinkParser as any)[mockName].mockReturnValue(value);
+		(mockLinkParser as unknown)[mockName].mockReturnValue(value);
 	}
 }
 
 // Helper to verify mock calls
 export function verifyMockCalls(
 	mockName: keyof typeof mockFileOperations | keyof typeof mockLinkParser,
-	expectedCalls: any[][]
+	expectedCalls: unknown[][]
 ) {
 	const mock =
-		mockName in mockFileOperations ? (mockFileOperations as any)[mockName] : (mockLinkParser as any)[mockName];
+		mockName in mockFileOperations ? (mockFileOperations as unknown)[mockName] : (mockLinkParser as unknown)[mockName];
 
 	expect(mock).toHaveBeenCalledTimes(expectedCalls.length);
 	expectedCalls.forEach((args, index) => {

@@ -1,15 +1,12 @@
 import js from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
-import obsidianmd from "eslint-plugin-obsidianmd";
-import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-export default defineConfig([
+export default [
 	// Base recommended configs
 	js.configs.recommended,
 	...tseslint.configs.recommended,
-	...obsidianmd.configs.recommended,
 	eslintConfigPrettier,
 
 	// Global ignores
@@ -43,7 +40,13 @@ export default defineConfig([
 			},
 			parserOptions: {
 				projectService: {
-					allowDefaultProject: ["eslint.config.js", ".prettierrc.mjs", "vitest.config.ts", "version-bump.mjs"],
+					allowDefaultProject: [
+						"eslint.config.js",
+						".prettierrc.mjs",
+						"vitest.config.ts",
+						"version-bump.mjs",
+						"esbuild.config.mjs",
+					],
 					defaultProject: "tsconfig.json",
 				},
 				tsconfigRootDir: import.meta.dirname,
@@ -73,4 +76,4 @@ export default defineConfig([
 			"@typescript-eslint/triple-slash-reference": "off",
 		},
 	},
-]);
+];

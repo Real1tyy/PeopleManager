@@ -31,7 +31,7 @@ describe("RelationshipSyncManager", () => {
 
 		_relationshipSyncManager = new RelationshipSyncManager(
 			mockApp,
-			mockIndexer as any,
+			mockIndexer as unknown,
 			mockSettingsStore as SettingsStore
 		);
 	});
@@ -466,18 +466,18 @@ describe("RelationshipSyncManager", () => {
 
 	describe("cleanup", () => {
 		it("should unsubscribe from indexer events on destroy", () => {
-			const subscriptions: any[] = [];
+			const subscriptions: unknown[] = [];
 			vi.spyOn(mockIndexer.events$, "subscribe").mockImplementation((_observer) => {
 				const subscription = {
 					unsubscribe: vi.fn(),
 					closed: false,
 				};
 				subscriptions.push(subscription);
-				return subscription as any;
+				return subscription as unknown;
 			});
 
 			// Create a new manager to capture subscription
-			const manager = new RelationshipSyncManager(mockApp, mockIndexer as any, mockSettingsStore as SettingsStore);
+			const manager = new RelationshipSyncManager(mockApp, mockIndexer as unknown, mockSettingsStore as SettingsStore);
 
 			manager.destroy();
 

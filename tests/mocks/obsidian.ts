@@ -3,11 +3,11 @@ import type { PersonFrontmatter } from "../../src/types";
 
 // Base Plugin class mock
 export class Plugin {
-	app: any;
-	manifest: any;
-	settings: any;
+	app: unknown;
+	manifest: unknown;
+	settings: unknown;
 
-	constructor(app: any, manifest: any) {
+	constructor(app: unknown, manifest: unknown) {
 		this.app = app;
 		this.manifest = manifest;
 	}
@@ -56,11 +56,11 @@ export class Plugin {
 
 // PluginSettingTab mock
 export class PluginSettingTab {
-	app: any;
-	plugin: any;
+	app: unknown;
+	plugin: unknown;
 	containerEl: HTMLElement;
 
-	constructor(app: any, plugin: any) {
+	constructor(app: unknown, plugin: unknown) {
 		this.app = app;
 		this.plugin = plugin;
 		this.containerEl = document.createElement("div");
@@ -71,11 +71,11 @@ export class PluginSettingTab {
 
 // ItemView mock
 export class ItemView {
-	app: any;
-	leaf: any;
+	app: unknown;
+	leaf: unknown;
 	containerEl: HTMLElement;
 
-	constructor(leaf: any) {
+	constructor(leaf: unknown) {
 		this.leaf = leaf;
 		this.app = leaf?.app;
 		this.containerEl = document.createElement("div");
@@ -126,8 +126,8 @@ export class Setting {
 export class TFolder {
 	path: string;
 	name: string;
-	children: any[];
-	vault: any;
+	children: unknown[];
+	vault: unknown;
 	parent: TFolder | null;
 
 	constructor(path: string) {
@@ -149,8 +149,8 @@ export class TFile {
 	name: string;
 	basename: string;
 	extension: string;
-	stat: any;
-	vault: any;
+	stat: unknown;
+	vault: unknown;
 	parent: TFolder | null;
 
 	constructor(path: string, parentPath?: string) {
@@ -178,12 +178,12 @@ export class TFile {
 
 // Modal mock
 export class Modal {
-	app: any;
+	app: unknown;
 	containerEl: HTMLElement;
 	titleEl: HTMLElement;
 	contentEl: HTMLElement;
 
-	constructor(app: any) {
+	constructor(app: unknown) {
 		this.app = app;
 		this.containerEl = document.createElement("div");
 		this.titleEl = document.createElement("div");
@@ -209,7 +209,7 @@ export const MarkdownRenderer = {
 };
 
 // Debounce function mock
-export function debounce<T extends (...args: any[]) => any>(func: T, wait: number, immediate?: boolean): T {
+export function debounce<T extends (...args: unknown[]) => unknown>(func: T, wait: number, immediate?: boolean): T {
 	let timeout: ReturnType<typeof setTimeout> | null = null;
 
 	return ((...args: Parameters<T>) => {
