@@ -39,7 +39,6 @@ export default class PeopleManagerPlugin extends Plugin {
 	onunload() {
 		console.log("Unloading People Manager");
 		this.disablePlugin();
-		// GenericSettingsStore handles its own cleanup
 	}
 
 	async enablePlugin(): Promise<void> {
