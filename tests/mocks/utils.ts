@@ -74,9 +74,9 @@ export function setupMockImplementation(
 	implementation: (...args: unknown[]) => unknown
 ) {
 	if (mockName in mockFileOperations) {
-		(mockFileOperations as unknown)[mockName].mockImplementation(implementation);
+		(mockFileOperations as Record<string, ReturnType<typeof vi.fn>>)[mockName].mockImplementation(implementation);
 	} else if (mockName in mockLinkParser) {
-		(mockLinkParser as unknown)[mockName].mockImplementation(implementation);
+		(mockLinkParser as Record<string, ReturnType<typeof vi.fn>>)[mockName].mockImplementation(implementation);
 	}
 }
 
@@ -86,9 +86,9 @@ export function setupMockReturnValue(
 	value: unknown
 ) {
 	if (mockName in mockFileOperations) {
-		(mockFileOperations as unknown)[mockName].mockReturnValue(value);
+		(mockFileOperations as Record<string, ReturnType<typeof vi.fn>>)[mockName].mockReturnValue(value);
 	} else if (mockName in mockLinkParser) {
-		(mockLinkParser as unknown)[mockName].mockReturnValue(value);
+		(mockLinkParser as Record<string, ReturnType<typeof vi.fn>>)[mockName].mockReturnValue(value);
 	}
 }
 
@@ -98,7 +98,9 @@ export function verifyMockCalls(
 	expectedCalls: unknown[][]
 ) {
 	const mock =
-		mockName in mockFileOperations ? (mockFileOperations as unknown)[mockName] : (mockLinkParser as unknown)[mockName];
+		mockName in mockFileOperations
+			? (mockFileOperations as Record<string, ReturnType<typeof vi.fn>>)[mockName]
+			: (mockLinkParser as Record<string, ReturnType<typeof vi.fn>>)[mockName];
 
 	expect(mock).toHaveBeenCalledTimes(expectedCalls.length);
 	expectedCalls.forEach((args, index) => {

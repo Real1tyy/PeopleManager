@@ -75,7 +75,7 @@ export class ItemView {
 	leaf: unknown;
 	containerEl: HTMLElement;
 
-	constructor(leaf: unknown) {
+	constructor(leaf: { app?: unknown } = {}) {
 		this.leaf = leaf;
 		this.app = leaf?.app;
 		this.containerEl = document.createElement("div");

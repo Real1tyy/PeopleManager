@@ -1,7 +1,7 @@
 import type { App, TFile } from "obsidian";
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject, Subject, Subscription } from "rxjs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { IndexerEvent } from "../src/core/indexer";
+import type { IndexerEvent, PeopleIndexer } from "../src/core/indexer";
 import { RelationshipSyncManager } from "../src/core/relationship-sync";
 import type { SettingsStore } from "../src/core/settings-store";
 import type { PersonFrontmatter } from "../src/types";
@@ -31,7 +31,7 @@ describe("RelationshipSyncManager", () => {
 
 		_relationshipSyncManager = new RelationshipSyncManager(
 			mockApp,
-			mockIndexer as unknown,
+			mockIndexer as unknown as PeopleIndexer,
 			mockSettingsStore as SettingsStore
 		);
 	});
@@ -466,18 +466,26 @@ describe("RelationshipSyncManager", () => {
 
 	describe("cleanup", () => {
 		it("should unsubscribe from indexer events on destroy", () => {
-			const subscriptions: unknown[] = [];
+			interface MockSubscription extends Subscription {
+				unsubscribe: ReturnType<typeof vi.fn>;
+			}
+
+			const subscriptions: MockSubscription[] = [];
 			vi.spyOn(mockIndexer.events$, "subscribe").mockImplementation((_observer) => {
 				const subscription = {
 					unsubscribe: vi.fn(),
 					closed: false,
-				};
+				} as MockSubscription;
 				subscriptions.push(subscription);
-				return subscription as unknown;
+				return subscription;
 			});
 
 			// Create a new manager to capture subscription
-			const manager = new RelationshipSyncManager(mockApp, mockIndexer as unknown, mockSettingsStore as SettingsStore);
+			const manager = new RelationshipSyncManager(
+				mockApp,
+				mockIndexer as unknown as PeopleIndexer,
+				mockSettingsStore as SettingsStore
+			);
 
 			manager.destroy();
 

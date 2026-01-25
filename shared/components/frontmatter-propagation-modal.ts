@@ -29,7 +29,7 @@ export class FrontmatterPropagationModal extends Modal {
 		contentEl.createEl("h2", { text: "Propagate frontmatter changes?" });
 
 		contentEl.createEl("p", {
-			text: `The recurring event "${this.options.eventTitle}" has frontmatter changes. Do you want to apply these changes to all ${this.options.instanceCount} physical instances?`,
+			text: `The recurring event "${this.options.eventTitle}" has frontmatter changes. Do you want to apply these changes to all ${this.options.instanceCount} instances?`,
 		});
 
 		const changesContainer = contentEl.createDiv({ cls: `${prefix}-frontmatter-changes` });
