@@ -14,7 +14,7 @@ export interface BaseRule {
  */
 export abstract class BaseEvaluator<TRule extends BaseRule, TSettings> {
 	protected rules: TRule[] = [];
-	private compiledFunctions = new Map<string, ((...args: any[]) => boolean) | null>();
+	private compiledFunctions = new Map<string, ((...args: unknown[]) => boolean) | null>();
 	private propertyMapping = new Map<string, string>();
 	private subscription: Subscription | null = null;
 
@@ -58,7 +58,7 @@ export abstract class BaseEvaluator<TRule extends BaseRule, TSettings> {
 			if (!compiledFunc) {
 				const sanitized = sanitizeExpression(rule.expression, this.propertyMapping);
 				const params = Array.from(this.propertyMapping.values());
-				compiledFunc = new Function(...params, `"use strict"; return ${sanitized};`) as (...args: any[]) => boolean;
+				compiledFunc = new Function(...params, `"use strict"; return ${sanitized};`) as (...args: unknown[]) => boolean;
 				this.compiledFunctions.set(rule.id, compiledFunc);
 			}
 
@@ -79,7 +79,7 @@ export abstract class BaseEvaluator<TRule extends BaseRule, TSettings> {
 		}
 	}
 
-	protected isTruthy(value: any): boolean {
+	protected isTruthy(value: unknown): boolean {
 		return value === true;
 	}
 }

@@ -14,13 +14,13 @@ export abstract class RegisteredEventsComponent {
 	 * Register an Obsidian event (workspace, vault, metadataCache, etc.)
 	 * Event will be automatically cleaned up when destroy() is called
 	 */
-	protected registerEvent<T extends keyof any>(
+	protected registerEvent<T extends PropertyKey>(
 		emitter: {
-			on(event: T, callback: (...args: any[]) => void): void;
-			off(event: T, callback: (...args: any[]) => void): void;
+			on(event: T, callback: (...args: unknown[]) => void): void;
+			off(event: T, callback: (...args: unknown[]) => void): void;
 		},
 		event: T,
-		callback: (...args: any[]) => void
+		callback: (...args: unknown[]) => void
 	): void {
 		emitter.on(event, callback);
 		this.eventCleanupFunctions.push(() => {

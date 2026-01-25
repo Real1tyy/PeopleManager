@@ -175,7 +175,7 @@ export interface FileContext {
 	pathWithExt: string;
 	baseName: string;
 	file: TFile | null;
-	frontmatter: Record<string, any> | undefined;
+	frontmatter: Record<string, unknown> | undefined;
 	cache: CachedMetadata | null;
 }
 

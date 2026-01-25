@@ -6,7 +6,7 @@ export interface PropertyRendererConfig {
 	createSeparator?: () => HTMLElement | Text;
 }
 
-export function renderPropertyValue(container: HTMLElement, value: any, config: PropertyRendererConfig): void {
+export function renderPropertyValue(container: HTMLElement, value: unknown, config: PropertyRendererConfig): void {
 	// Handle arrays - render each item separately
 	if (Array.isArray(value)) {
 		const hasClickableLinks = value.some(isObsidianLink);
@@ -29,7 +29,7 @@ export function renderPropertyValue(container: HTMLElement, value: any, config: 
 	renderSingleValue(container, value, config);
 }
 
-function renderSingleValue(container: HTMLElement, value: any, config: PropertyRendererConfig): void {
+function renderSingleValue(container: HTMLElement, value: unknown, config: PropertyRendererConfig): void {
 	const stringValue = String(value).trim();
 
 	if (isObsidianLink(stringValue)) {

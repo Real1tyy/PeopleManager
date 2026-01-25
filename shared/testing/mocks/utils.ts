@@ -71,13 +71,15 @@ export function resetAllMocks() {
 // Helper to setup mocks with specific implementations
 export function setupMockImplementation(
 	mockName: keyof typeof mockFileOperations | keyof typeof mockLinkParser,
-	implementation: (...args: any[]) => any
+	implementation: (...args: unknown[]) => unknown
 ) {
 	if (mockName in mockFileOperations) {
 		const mock = mockFileOperations[mockName as keyof typeof mockFileOperations];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(mock as any).mockImplementation(implementation);
 	} else if (mockName in mockLinkParser) {
 		const mock = mockLinkParser[mockName as keyof typeof mockLinkParser];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(mock as any).mockImplementation(implementation);
 	}
 }
@@ -85,13 +87,15 @@ export function setupMockImplementation(
 // Helper to setup mock return values
 export function setupMockReturnValue(
 	mockName: keyof typeof mockFileOperations | keyof typeof mockLinkParser,
-	value: any
+	value: unknown
 ) {
 	if (mockName in mockFileOperations) {
 		const mock = mockFileOperations[mockName as keyof typeof mockFileOperations];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(mock as any).mockReturnValue(value);
 	} else if (mockName in mockLinkParser) {
 		const mock = mockLinkParser[mockName as keyof typeof mockLinkParser];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(mock as any).mockReturnValue(value);
 	}
 }
@@ -99,12 +103,12 @@ export function setupMockReturnValue(
 // Helper to verify mock calls
 export function verifyMockCalls(
 	mockName: keyof typeof mockFileOperations | keyof typeof mockLinkParser,
-	expectedCalls: any[][]
+	expectedCalls: unknown[][]
 ) {
 	const mock =
 		mockName in mockFileOperations
-			? (mockFileOperations[mockName as keyof typeof mockFileOperations] as any)
-			: (mockLinkParser[mockName as keyof typeof mockLinkParser] as any);
+			? (mockFileOperations[mockName as keyof typeof mockFileOperations] as unknown)
+			: (mockLinkParser[mockName as keyof typeof mockLinkParser] as unknown);
 
 	expect(mock).toHaveBeenCalledTimes(expectedCalls.length);
 	expectedCalls.forEach((args, index) => {
