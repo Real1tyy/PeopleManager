@@ -23,7 +23,7 @@ const NotificationsSettingsSchema = z
 			.number()
 			.int()
 			.min(1)
-			.max(1440)
+			.max(1000)
 			.catch(SETTINGS_DEFAULTS.DEFAULT_NOTIFICATION_CHECK_INTERVAL_MINUTES),
 		notificationLeadTimeHours: z
 			.number()
