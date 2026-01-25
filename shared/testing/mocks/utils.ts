@@ -74,9 +74,9 @@ export function setupMockImplementation(
 	implementation: (...args: any[]) => any
 ) {
 	if (mockName in mockFileOperations) {
-		(mockFileOperations as any)[mockName].mockImplementation(implementation);
+		(mockFileOperations[mockName as keyof typeof mockFileOperations] as any).mockImplementation(implementation);
 	} else if (mockName in mockLinkParser) {
-		(mockLinkParser as any)[mockName].mockImplementation(implementation);
+		(mockLinkParser[mockName as keyof typeof mockLinkParser] as any).mockImplementation(implementation);
 	}
 }
 
@@ -86,9 +86,9 @@ export function setupMockReturnValue(
 	value: any
 ) {
 	if (mockName in mockFileOperations) {
-		(mockFileOperations as any)[mockName].mockReturnValue(value);
+		(mockFileOperations[mockName as keyof typeof mockFileOperations] as any).mockReturnValue(value);
 	} else if (mockName in mockLinkParser) {
-		(mockLinkParser as any)[mockName].mockReturnValue(value);
+		(mockLinkParser[mockName as keyof typeof mockLinkParser] as any).mockReturnValue(value);
 	}
 }
 
@@ -98,7 +98,9 @@ export function verifyMockCalls(
 	expectedCalls: any[][]
 ) {
 	const mock =
-		mockName in mockFileOperations ? (mockFileOperations as any)[mockName] : (mockLinkParser as any)[mockName];
+		mockName in mockFileOperations
+			? (mockFileOperations[mockName as keyof typeof mockFileOperations] as any)
+			: (mockLinkParser[mockName as keyof typeof mockLinkParser] as any);
 
 	expect(mock).toHaveBeenCalledTimes(expectedCalls.length);
 	expectedCalls.forEach((args, index) => {

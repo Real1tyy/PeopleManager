@@ -74,7 +74,7 @@ export class SettingsUIBuilder<TSchema extends ZodObject<ZodRawShape>> {
 			if (value === undefined || value === null) {
 				return undefined;
 			}
-			value = value[k];
+			value = (value as Record<string, any>)[k];
 		}
 
 		return value;
@@ -85,9 +85,9 @@ export class SettingsUIBuilder<TSchema extends ZodObject<ZodRawShape>> {
 	 */
 	private setNestedValue(key: string, value: unknown): z.infer<TSchema> {
 		const keys = key.split(".");
-		const newSettings = JSON.parse(JSON.stringify(this.settings)); // Deep clone
+		const newSettings = JSON.parse(JSON.stringify(this.settings)) as Record<string, any>; // Deep clone
 
-		let current: any = newSettings;
+		let current: Record<string, any> = newSettings;
 
 		// Navigate to the parent of the target property
 		for (let i = 0; i < keys.length - 1; i++) {
@@ -95,14 +95,14 @@ export class SettingsUIBuilder<TSchema extends ZodObject<ZodRawShape>> {
 			if (!(k in current)) {
 				current[k] = {};
 			}
-			current = current[k];
+			current = current[k] as Record<string, any>;
 		}
 
 		// Set the final property
 		const lastKey = keys[keys.length - 1];
 		current[lastKey] = value;
 
-		return newSettings;
+		return newSettings as z.infer<TSchema>;
 	}
 
 	private async updateSetting(key: string, value: unknown): Promise<void> {
@@ -131,21 +131,21 @@ export class SettingsUIBuilder<TSchema extends ZodObject<ZodRawShape>> {
 				if (!fieldSchema) return {};
 
 				// Unwrap nested schemas
-				while ((fieldSchema as any)._def?.innerType) {
+				while (fieldSchema && (fieldSchema as any)._def?.innerType) {
 					fieldSchema = (fieldSchema as any)._def.innerType;
 				}
 
-				fieldSchema = (fieldSchema as any).shape?.[k] ?? (fieldSchema as any)[k];
+				fieldSchema = (fieldSchema as any)?.shape?.[k] ?? (fieldSchema as any)?.[k];
 			}
 
 			if (!fieldSchema) return {};
 
-			let innerSchema = fieldSchema;
-			while ((innerSchema as any)._def?.innerType) {
+			let innerSchema: any = fieldSchema;
+			while (innerSchema && (innerSchema as any)._def?.innerType) {
 				innerSchema = (innerSchema as any)._def.innerType;
 			}
 
-			if ((innerSchema as any)._def?.typeName === "ZodNumber") {
+			if (innerSchema && (innerSchema as any)._def?.typeName === "ZodNumber") {
 				const checks = ((innerSchema as ZodNumber)._def as any).checks || [];
 				let min: number | undefined;
 				let max: number | undefined;
@@ -178,26 +178,26 @@ export class SettingsUIBuilder<TSchema extends ZodObject<ZodRawShape>> {
 				if (!fieldSchema) return undefined;
 
 				// Unwrap nested schemas
-				while ((fieldSchema as any)._def?.innerType) {
+				while (fieldSchema && (fieldSchema as any)._def?.innerType) {
 					fieldSchema = (fieldSchema as any)._def.innerType;
 				}
 
-				fieldSchema = (fieldSchema as any).shape?.[k] ?? (fieldSchema as any)[k];
+				fieldSchema = (fieldSchema as any)?.shape?.[k] ?? (fieldSchema as any)?.[k];
 			}
 
 			if (!fieldSchema) return undefined;
 
-			let innerSchema = fieldSchema;
-			while ((innerSchema as any)._def?.innerType) {
+			let innerSchema: any = fieldSchema;
+			while (innerSchema && (innerSchema as any)._def?.innerType) {
 				innerSchema = (innerSchema as any)._def.innerType;
 			}
 
-			if ((innerSchema as any)._def?.typeName === "ZodArray") {
+			if (innerSchema && (innerSchema as any)._def?.typeName === "ZodArray") {
 				const elementType = ((innerSchema as ZodArray<any>)._def as any).type;
-				if ((elementType as any)._def?.typeName === "ZodNumber") {
+				if (elementType && (elementType as any)._def?.typeName === "ZodNumber") {
 					return "number";
 				}
-				if ((elementType as any)._def?.typeName === "ZodString") {
+				if (elementType && (elementType as any)._def?.typeName === "ZodString") {
 					return "string";
 				}
 			}

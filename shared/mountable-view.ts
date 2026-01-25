@@ -4,17 +4,16 @@ type AbstractCtor<T = Record<string, never>> = abstract new (...args: any[]) => 
 
 export function MountableView<TBase extends AbstractCtor<ItemView>>(Base: TBase, prefix?: string) {
 	abstract class Mountable extends Base {
+		constructor(...args: any[]) {
+			super(...(args as [any]));
+			this.#classPrefix = prefix ? `${prefix}-mountable` : "mountable";
+		}
 		// use ECMAScript private fields to avoid TS4094
 		#mounted = false;
 		#resizeObserver: ResizeObserver | null = null;
 		#resizeTimeout: ReturnType<typeof setTimeout> | null = null;
 		#loadingEl: HTMLElement | null = null;
 		#classPrefix: string;
-
-		constructor(...args: any[]) {
-			super(...args);
-			this.#classPrefix = prefix ? `${prefix}-mountable` : "mountable";
-		}
 
 		abstract mount(): Promise<void>;
 		abstract unmount(): Promise<void>;
@@ -142,6 +141,8 @@ export function MountableView<TBase extends AbstractCtor<ItemView>>(Base: TBase,
 		}
 
 		addWorkspaceEventSub(eventName: string, callback: (...args: any[]) => void): void {
+			// Type assertion needed because workspace.on() has specific event name overloads
+			// but we need to support custom event names from plugins
 			const ref = this.app.workspace.on(eventName as any, callback);
 			this.registerEvent(ref);
 		}
