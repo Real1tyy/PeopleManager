@@ -121,7 +121,11 @@ export function MountableView<TBase extends AbstractCtor<ItemView>>(Base: TBase,
 			return new Promise<void>((resolve) => {
 				const check = () => {
 					const r = el.getBoundingClientRect();
-					r.width > 0 && r.height > 0 ? resolve() : requestAnimationFrame(check);
+					if (r.width > 0 && r.height > 0) {
+						resolve();
+					} else {
+						requestAnimationFrame(check);
+					}
 				};
 				check();
 				setTimeout(resolve, fallbackMs);

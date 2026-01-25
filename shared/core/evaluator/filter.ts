@@ -1,6 +1,6 @@
 import { BaseEvaluator, type BaseRule } from "./base";
 
-export interface FilterRule extends BaseRule {}
+export type FilterRule = BaseRule;
 
 /**
  * Generic evaluator for filtering based on frontmatter expressions.

@@ -1,21 +1,14 @@
 import { Notice } from "obsidian";
 
-export interface BatchOperationOptions {
-	closeAfter?: boolean;
-	callOnComplete?: boolean;
-}
-
-export interface BatchOperationResult {
-	successCount: number;
-	errorCount: number;
-}
-
+/**
+ * Runs a batch operation on a collection of items with error handling and optional result notification.
+ */
 export async function runBatchOperation<T>(
 	items: T[],
 	operationLabel: string,
 	handler: (item: T) => Promise<void>,
 	showResult: boolean = true
-): Promise<BatchOperationResult> {
+): Promise<{ successCount: number; errorCount: number }> {
 	let successCount = 0;
 	let errorCount = 0;
 
@@ -30,18 +23,14 @@ export async function runBatchOperation<T>(
 	}
 
 	if (showResult) {
-		showBatchOperationResult(operationLabel, successCount, errorCount);
+		if (errorCount === 0) {
+			new Notice(`${operationLabel}: ${successCount} item${successCount === 1 ? "" : "s"} processed successfully`);
+		} else {
+			new Notice(`${operationLabel}: ${successCount} succeeded, ${errorCount} failed. Check console for details.`);
+		}
 	}
 
 	return { successCount, errorCount };
-}
-
-export function showBatchOperationResult(operation: string, successCount: number, errorCount: number): void {
-	if (errorCount === 0) {
-		new Notice(`${operation}: ${successCount} item${successCount === 1 ? "" : "s"} processed successfully`);
-	} else {
-		new Notice(`${operation}: ${successCount} succeeded, ${errorCount} failed. Check console for details.`);
-	}
 }
 
 /**

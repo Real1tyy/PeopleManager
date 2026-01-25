@@ -4,7 +4,6 @@ export * from "./evaluator";
 export * from "./expression-utils";
 export * from "./frontmatter-value";
 export * from "./generate";
-export * from "./history";
 export * from "./indexer";
 export * from "./property-renderer";
 export * from "./validation";
