@@ -51,9 +51,22 @@ const context = await esbuild.context({
 		{
 			name: "resolve-changelog",
 			setup(build) {
-				build.onResolve({ filter: /.*docs-site\/docs\/changelog\.md$/ }, (_args) => {
+				build.onResolve({ filter: /.*changelog\.md$/ }, (args) => {
+					if (args.path.includes("docs-site/docs/changelog.md")) {
+						return {
+							path: path.resolve(__dirname, "docs-site/docs/changelog.md"),
+						};
+					}
+				});
+			},
+		},
+		{
+			name: "resolve-shared-alias",
+			setup(build) {
+				build.onResolve({ filter: /^@real1ty-obsidian-plugins\// }, (args) => {
+					const modulePath = args.path.replace("@real1ty-obsidian-plugins/", "");
 					return {
-						path: path.resolve(__dirname, "docs-site/docs/changelog.md"),
+						path: path.resolve(__dirname, "shared", modulePath),
 					};
 				});
 			},
@@ -97,8 +110,9 @@ if (prod) {
 		}, debounceTimeout);
 	};
 
-	// Watch the src directory recursively
+	// Watch the src and shared directories recursively
 	fs.watch("./src", { recursive: true }, handleFileChange);
+	fs.watch("./shared", { recursive: true }, handleFileChange);
 
 	// Keep the process alive
 	process.on("SIGINT", () => {
