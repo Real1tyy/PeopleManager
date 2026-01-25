@@ -1,0 +1,15 @@
+node_modules
+dist
+main.js
+*.d.ts
+docs-site
+.obsidian
+build
+coverage
+.cache
+.eslintcache
+**/shared/**/*.js
+**/src/**/*.js
+**/tests/**/*.js
+pnpm-lock.yaml
+package-lock.json

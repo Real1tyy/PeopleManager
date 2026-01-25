@@ -46,11 +46,13 @@ See the [Installation Guide](https://yourusername.github.io/plugin-name/installa
 ## 💡 Use Cases
 
 ### Use Case 1
+
 - Benefit 1
 - Benefit 2
 - Benefit 3
 
 ### Use Case 2
+
 - Benefit 1
 - Benefit 2
 - Benefit 3
