@@ -74,9 +74,11 @@ export function setupMockImplementation(
 	implementation: (...args: any[]) => any
 ) {
 	if (mockName in mockFileOperations) {
-		(mockFileOperations[mockName as keyof typeof mockFileOperations] as any).mockImplementation(implementation);
+		const mock = mockFileOperations[mockName as keyof typeof mockFileOperations];
+		(mock as any).mockImplementation(implementation);
 	} else if (mockName in mockLinkParser) {
-		(mockLinkParser[mockName as keyof typeof mockLinkParser] as any).mockImplementation(implementation);
+		const mock = mockLinkParser[mockName as keyof typeof mockLinkParser];
+		(mock as any).mockImplementation(implementation);
 	}
 }
 
@@ -86,9 +88,11 @@ export function setupMockReturnValue(
 	value: any
 ) {
 	if (mockName in mockFileOperations) {
-		(mockFileOperations[mockName as keyof typeof mockFileOperations] as any).mockReturnValue(value);
+		const mock = mockFileOperations[mockName as keyof typeof mockFileOperations];
+		(mock as any).mockReturnValue(value);
 	} else if (mockName in mockLinkParser) {
-		(mockLinkParser[mockName as keyof typeof mockLinkParser] as any).mockReturnValue(value);
+		const mock = mockLinkParser[mockName as keyof typeof mockLinkParser];
+		(mock as any).mockReturnValue(value);
 	}
 }
 

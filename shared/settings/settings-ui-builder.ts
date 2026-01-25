@@ -131,21 +131,42 @@ export class SettingsUIBuilder<TSchema extends ZodObject<ZodRawShape>> {
 				if (!fieldSchema) return {};
 
 				// Unwrap nested schemas
-				while (fieldSchema && (fieldSchema as any)._def?.innerType) {
+				while (
+					fieldSchema &&
+					typeof fieldSchema === "object" &&
+					"_def" in fieldSchema &&
+					(fieldSchema as any)._def?.innerType
+				) {
 					fieldSchema = (fieldSchema as any)._def.innerType;
 				}
 
-				fieldSchema = (fieldSchema as any)?.shape?.[k] ?? (fieldSchema as any)?.[k];
+				if (fieldSchema && typeof fieldSchema === "object" && "shape" in fieldSchema) {
+					fieldSchema = (fieldSchema as any).shape?.[k];
+				} else if (fieldSchema && typeof fieldSchema === "object" && k in fieldSchema) {
+					fieldSchema = (fieldSchema as any)[k];
+				} else {
+					return {};
+				}
 			}
 
 			if (!fieldSchema) return {};
 
 			let innerSchema: any = fieldSchema;
-			while (innerSchema && (innerSchema as any)._def?.innerType) {
+			while (
+				innerSchema &&
+				typeof innerSchema === "object" &&
+				"_def" in innerSchema &&
+				(innerSchema as any)._def?.innerType
+			) {
 				innerSchema = (innerSchema as any)._def.innerType;
 			}
 
-			if (innerSchema && (innerSchema as any)._def?.typeName === "ZodNumber") {
+			if (
+				innerSchema &&
+				typeof innerSchema === "object" &&
+				"_def" in innerSchema &&
+				(innerSchema as any)._def?.typeName === "ZodNumber"
+			) {
 				const checks = ((innerSchema as ZodNumber)._def as any).checks || [];
 				let min: number | undefined;
 				let max: number | undefined;
@@ -178,21 +199,42 @@ export class SettingsUIBuilder<TSchema extends ZodObject<ZodRawShape>> {
 				if (!fieldSchema) return undefined;
 
 				// Unwrap nested schemas
-				while (fieldSchema && (fieldSchema as any)._def?.innerType) {
+				while (
+					fieldSchema &&
+					typeof fieldSchema === "object" &&
+					"_def" in fieldSchema &&
+					(fieldSchema as any)._def?.innerType
+				) {
 					fieldSchema = (fieldSchema as any)._def.innerType;
 				}
 
-				fieldSchema = (fieldSchema as any)?.shape?.[k] ?? (fieldSchema as any)?.[k];
+				if (fieldSchema && typeof fieldSchema === "object" && "shape" in fieldSchema) {
+					fieldSchema = (fieldSchema as any).shape?.[k];
+				} else if (fieldSchema && typeof fieldSchema === "object" && k in fieldSchema) {
+					fieldSchema = (fieldSchema as any)[k];
+				} else {
+					return undefined;
+				}
 			}
 
 			if (!fieldSchema) return undefined;
 
 			let innerSchema: any = fieldSchema;
-			while (innerSchema && (innerSchema as any)._def?.innerType) {
+			while (
+				innerSchema &&
+				typeof innerSchema === "object" &&
+				"_def" in innerSchema &&
+				(innerSchema as any)._def?.innerType
+			) {
 				innerSchema = (innerSchema as any)._def.innerType;
 			}
 
-			if (innerSchema && (innerSchema as any)._def?.typeName === "ZodArray") {
+			if (
+				innerSchema &&
+				typeof innerSchema === "object" &&
+				"_def" in innerSchema &&
+				(innerSchema as any)._def?.typeName === "ZodArray"
+			) {
 				const elementType = ((innerSchema as ZodArray<any>)._def as any).type;
 				if (elementType && (elementType as any)._def?.typeName === "ZodNumber") {
 					return "number";

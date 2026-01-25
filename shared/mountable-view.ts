@@ -5,7 +5,7 @@ type AbstractCtor<T = Record<string, never>> = abstract new (...args: any[]) => 
 export function MountableView<TBase extends AbstractCtor<ItemView>>(Base: TBase, prefix?: string) {
 	abstract class Mountable extends Base {
 		constructor(...args: any[]) {
-			super(...(args as [any]));
+			super(...args);
 			this.#classPrefix = prefix ? `${prefix}-mountable` : "mountable";
 		}
 		// use ECMAScript private fields to avoid TS4094
