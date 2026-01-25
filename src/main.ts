@@ -1,90 +1,158 @@
-import { getActiveFileOrThrow } from "@real1ty-obsidian-plugins/file/file-operations";
-import { Plugin } from "obsidian";
+import { Notice, Plugin } from "obsidian";
+import { PeopleIndexer } from "./core/indexer";
+import { NotificationManager } from "./core/notification-manager";
+import { PeopleManager } from "./core/people-manager";
+import { RelationshipSyncManager } from "./core/relationship-sync";
+import { SettingsStore } from "./core/settings-store";
+import { PeopleManagerSettingsTab } from "./ui/settings-tab";
 
-type PluginSettings = Record<string, never>;
-
-const DEFAULT_SETTINGS: PluginSettings = {};
-
-export default class PluginNamePlugin extends Plugin {
-	settings: PluginSettings;
+export default class PeopleManagerPlugin extends Plugin {
+	settingsStore: SettingsStore;
+	private indexer: PeopleIndexer | null = null;
+	private peopleManager: PeopleManager | null = null;
+	private notificationManager: NotificationManager | null = null;
+	private relationshipSyncManager: RelationshipSyncManager | null = null;
+	private ribbonIconEl: HTMLElement | null = null;
 
 	async onload() {
-		console.log("Loading Plugin Name");
+		console.log("Loading People Manager");
 
-		await this.loadSettings();
+		// Initialize settings store
+		this.settingsStore = new SettingsStore(this);
+		await this.settingsStore.loadSettings();
 
-		// Add ribbon icon
-		this.addRibbonIcon("dice", "Plugin Name", () => {
-			console.log("Plugin Name ribbon icon clicked");
-		});
+		// Add settings tab
+		this.addSettingTab(new PeopleManagerSettingsTab(this.app, this));
 
-		// Add command
+		// Add ribbon icon if enabled
+		this.updateRibbonIcon();
+
+		// Add commands
+		this.registerCommands();
+
+		// Enable plugin if settings allow
+		if (this.settingsStore.currentSettings.enabled) {
+			await this.enablePlugin();
+		}
+	}
+
+	onunload() {
+		console.log("Unloading People Manager");
+		this.disablePlugin();
+		// GenericSettingsStore handles its own cleanup
+	}
+
+	async enablePlugin(): Promise<void> {
+		if (this.indexer) {
+			return; // Already enabled
+		}
+
+		try {
+			// Initialize indexer
+			this.indexer = new PeopleIndexer(this.app, this.settingsStore);
+
+			// Initialize people manager
+			this.peopleManager = new PeopleManager(this.app, this.indexer, this.settingsStore);
+
+			// Initialize notification manager
+			this.notificationManager = new NotificationManager(this.app, this.peopleManager, this.settingsStore);
+
+			// Initialize relationship sync manager
+			this.relationshipSyncManager = new RelationshipSyncManager(this.app, this.indexer, this.settingsStore);
+
+			// Start systems
+			await this.indexer.start();
+			this.notificationManager.start();
+
+			if (this.settingsStore.currentSettings.debugMode) {
+				console.log("[PeopleManager] Plugin enabled successfully");
+			}
+
+			new Notice("People Manager enabled");
+		} catch (error) {
+			console.error("[PeopleManager] Failed to enable plugin:", error);
+			new Notice("Failed to enable People Manager");
+		}
+	}
+
+	disablePlugin(): void {
+		this.relationshipSyncManager?.destroy();
+		this.notificationManager?.destroy();
+		this.peopleManager?.destroy();
+		this.indexer?.stop();
+
+		this.relationshipSyncManager = null;
+		this.notificationManager = null;
+		this.peopleManager = null;
+		this.indexer = null;
+
+		if (this.settingsStore.currentSettings.debugMode) {
+			console.log("[PeopleManager] Plugin disabled");
+		}
+	}
+
+	updateRibbonIcon(): void {
+		// Remove existing icon
+		if (this.ribbonIconEl) {
+			this.ribbonIconEl.remove();
+			this.ribbonIconEl = null;
+		}
+
+		// Add new icon if enabled
+		if (this.settingsStore.currentSettings.showRibbonIcon) {
+			this.ribbonIconEl = this.addRibbonIcon("users", "People Manager", () => {
+				this.showPeopleStats();
+			});
+		}
+	}
+
+	private registerCommands(): void {
+		// Command: Show people stats
 		this.addCommand({
-			id: "open-sample-modal",
-			name: "Open sample modal",
+			id: "show-people-stats",
+			name: "Show people statistics",
 			callback: () => {
-				console.log("Sample command executed");
+				this.showPeopleStats();
 			},
 		});
 
-		// Example command using shared utilities
+		// Command: Check follow-ups now
 		this.addCommand({
-			id: "get-active-file",
-			name: "Get active file",
+			id: "check-followups-now",
+			name: "Check follow-ups now",
 			callback: () => {
-				try {
-					const file = getActiveFileOrThrow(this.app);
-					console.log(`Active file: ${file.path}`);
-				} catch {
-					console.error("No active file");
+				if (this.notificationManager) {
+					this.notificationManager.triggerCheck();
+				} else {
+					new Notice("People Manager is not enabled");
 				}
 			},
 		});
 
-		// Add settings tab
-		// this.addSettingTab(new PluginNameSettingTab(this.app, this));
+		// Command: Resync people
+		this.addCommand({
+			id: "resync-people",
+			name: "Resync all people",
+			callback: () => {
+				if (this.indexer) {
+					this.indexer.resync();
+					new Notice("Resyncing people...");
+				} else {
+					new Notice("People Manager is not enabled");
+				}
+			},
+		});
 	}
 
-	onunload() {
-		console.log("Unloading Plugin Name");
-	}
+	private showPeopleStats(): void {
+		if (!this.peopleManager) {
+			new Notice("People Manager is not enabled");
+			return;
+		}
 
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-	}
+		const stats = this.peopleManager.getStats();
+		const message = `📊 People Manager Stats\n\nTotal People: ${stats.totalPeople}\nUpcoming Follow-ups: ${stats.upcomingFollowUps}\nOverdue Follow-ups: ${stats.overdueFollowUps}`;
 
-	async saveSettings() {
-		await this.saveData(this.settings);
+		new Notice(message, 8000);
 	}
 }
-
-// Uncomment to add settings tab
-// import { App, PluginSettingTab, Setting } from "obsidian";
-//
-// class PluginNameSettingTab extends PluginSettingTab {
-// 	plugin: PluginNamePlugin;
-//
-// 	constructor(app: App, plugin: PluginNamePlugin) {
-// 		super(app, plugin);
-// 		this.plugin = plugin;
-// 	}
-//
-// 	display(): void {
-// 		const { containerEl } = this;
-//
-// 		containerEl.empty();
-//
-// 		new Setting(containerEl)
-// 			.setName("Setting name")
-// 			.setDesc("Setting description")
-// 			.addText((text) =>
-// 				text
-// 					.setPlaceholder("Enter value")
-// 					.setValue(this.plugin.settings.someSetting)
-// 					.onChange(async (value) => {
-// 						this.plugin.settings.someSetting = value;
-// 						await this.plugin.saveSettings();
-// 					})
-// 			);
-// 	}
-// }

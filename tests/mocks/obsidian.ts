@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { Frontmatter } from "../../src/types";
+import type { PersonFrontmatter } from "../../src/types";
 
 // Base Plugin class mock
 export class Plugin {
@@ -241,6 +241,7 @@ export interface MockApp {
 	};
 	metadataCache: {
 		getFileCache: ReturnType<typeof vi.fn>;
+		getFirstLinkpathDest: ReturnType<typeof vi.fn>;
 	};
 	vault: {
 		getAbstractFileByPath: ReturnType<typeof vi.fn>;
@@ -270,6 +271,7 @@ export function createMockApp(): MockApp {
 		},
 		metadataCache: {
 			getFileCache: vi.fn(),
+			getFirstLinkpathDest: vi.fn(),
 		},
 		vault: {
 			getAbstractFileByPath: vi.fn(),
@@ -311,7 +313,7 @@ export function createMockFile(
 }
 
 // Helper to create mock file cache
-export function createMockFileCache(frontmatter?: Frontmatter) {
+export function createMockFileCache(frontmatter?: PersonFrontmatter) {
 	return {
 		frontmatter: frontmatter || {},
 		frontmatterPosition: frontmatter ? { start: { line: 0 }, end: { line: 3 } } : null,
