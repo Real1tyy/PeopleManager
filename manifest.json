@@ -1,7 +1,7 @@
 {
 	"id": "people-manager",
 	"name": "People Manager",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"minAppVersion": "1.4.16",
 	"description": "Manage people and relationships in your Obsidian vault.",
 	"author": "Your Name",

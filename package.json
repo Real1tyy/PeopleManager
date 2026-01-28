@@ -1,6 +1,6 @@
 {
 	"name": "people-manager",
-	"version": "0.1.0",
+	"version": "0.0.2",
 	"description": "A powerful CRM plugin for managing contacts, tracking follow-ups, and building meaningful relationships in Obsidian.",
 	"type": "module",
 	"main": "main.js",
